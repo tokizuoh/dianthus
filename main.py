@@ -1,6 +1,8 @@
 import sys
-import pykakasi
 import sqlite3
+import datetime
+
+import pykakasi
 
 
 class Word:
@@ -31,6 +33,10 @@ def convert_roman(lemma: str) -> str:
     else:
         return roman
 
+def get_now_time() -> str:
+    dt_now = datetime.datetime.now()
+    now_str = dt_now.strftime('%Y%m%d_%H%M%S')
+    return now_str
 
 def main():
     con = sqlite3.connect('wnjpn.db')
@@ -46,6 +52,9 @@ def main():
         word = Word(word_id=word_id, lemma=lemma, roman=roman)
         words.append(word)
 
+    output_csv_file_path = './csv/'.format
+    # with open('./csv/debug_{}.csv', )
+    print(get_now_time())
     # args = sys.argv
     # if len(args) == 1:
     #     raise InvalidArgsError
