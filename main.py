@@ -14,22 +14,37 @@ class InvalidArgsError(Exception):
     pass
 
 
-# def convertRomanLetters(sentence: str) -> [Word]:
-#     kks = pykakasi.kakasi()
-#     res = kks.convert(sentence)
-#     words = []
-#     for item in res:
-#         words.append(Word(original=item['orig'], roman_letters=item['hepburn']))
-#     return words
+def convert_roman(lemma: str) -> str:
+    kks = pykakasi.kakasi()
+    res = kks.convert(lemma)
+    roman = ""
 
+    is_sentence = False
+    for item in res:
+        if len(roman) > 0:
+            is_sentence = True
+            break
+        roman =item['hepburn']
+    
+    if is_sentence:
+        return ""
+    else:
+        return roman
 
 
 def main():
     con = sqlite3.connect('wnjpn.db')
     cur = con.cursor()
     cur.execute("select * from word where lang='jpn'")
+    words = []
     for r in cur:
-        print(r)
+        word_id = r[0]
+        lemma = r[2]
+        roman = convert_roman(lemma=lemma)
+        if len(roman) == 0:
+            continue
+        word = Word(word_id=word_id, lemma=lemma, roman=roman)
+        words.append(word)
 
     # args = sys.argv
     # if len(args) == 1:
