@@ -1,6 +1,8 @@
+import csv
 import sys
 import sqlite3
 import datetime
+import argparse
 
 import pykakasi
 
@@ -33,12 +35,14 @@ def convert_roman(lemma: str) -> str:
     else:
         return roman
 
+
 def get_now_time() -> str:
     dt_now = datetime.datetime.now()
     now_str = dt_now.strftime('%Y%m%d_%H%M%S')
     return now_str
 
-def main():
+
+def generate_roman_csv():
     con = sqlite3.connect('wnjpn.db')
     cur = con.cursor()
     cur.execute("select * from word where lang='jpn'")
@@ -52,18 +56,22 @@ def main():
         word = Word(word_id=word_id, lemma=lemma, roman=roman)
         words.append(word)
 
-    output_csv_file_path = './csv/'.format
-    # with open('./csv/debug_{}.csv', )
-    print(get_now_time())
-    # args = sys.argv
-    # if len(args) == 1:
-    #     raise InvalidArgsError
+    now_time = get_now_time()
+    output_csv_file_path = './csv/{}.csv'.format(now_time)
+    with open(output_csv_file_path, 'w') as f:
+        writer = csv.writer(f)
+        for word in words:
+            row = [word.word_id, word.lemma, word.roman]
+            writer.writerow(row)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('gen', help='generate csv on ./csv/')
+    args = parser.parse_args()
     
-    # target = args[1]
-    # words = convertRomanLetters(sentence=target)
-    
-    # for w in words:
-    #     print(w.original, w.roman_letters)
+    if vars(args)['gen']:
+        generate_roman_csv()
 
 
 if __name__ == "__main__":
