@@ -67,12 +67,16 @@ def generate_roman_csv():
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('gen', help='generate csv on ./csv/')
+    parser.add_argument('--gen', action='store_true', help='generate csv on ./csv/')
+    parser.add_argument('--vow', action='store_true', help='add column vowel to ./csv/original.csv (create new .csv)')
     args = parser.parse_args()
     
-    if vars(args)['gen']:
+    args_dict = vars(args)
+    if args_dict['gen']:
         generate_roman_csv()
-
+    elif args_dict['vow']:
+        # [TODO]: Write vowel extraction logic.
+        exit(1)
 
 if __name__ == "__main__":
     main()
