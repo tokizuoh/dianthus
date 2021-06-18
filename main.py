@@ -1,3 +1,4 @@
+import os
 import csv
 import argparse
 import datetime
@@ -68,10 +69,29 @@ def generate_roman_csv():
             writer.writerow(row)
 
 
+def get_same_vowel_words(vowels: str) -> [Word]:
+    directory_path = './csv'
+    files = os.listdir(directory_path)
+    file_name = sorted(list(filter(lambda x: not x.startswith('original'), files)))[-1]
+    file_path = '{}/{}'.format(directory_path, file_name)
+
+    result = []
+
+    with open(file_path) as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if row[3] == vowels:
+                word = Word(word_id=row[0], lemma=row[1], roman=row[2], vowels=row[3])
+                result.append(word)
+
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--gen', action='store_true', help='generate csv on ./csv/')
     parser.add_argument('--vow', action='store_true', help='add column vowel to ./csv/original.csv (create new .csv)')
+    parser.add_argument('--demo', action='store_true', help='return words with the same vowel')
     args = parser.parse_args()
     
     args_dict = vars(args)
@@ -81,6 +101,13 @@ def main():
         # [TODO]: Write vowel extraction logic.
         # [TODO]: Allow sorting by vowel.
         a = vowel.extract('amana')
+    elif args_dict['demo']:
+        target = vowel.extract(input("INPUT: "))
+        print()
+        words = get_same_vowel_words(target)
+        
+        for word in words:
+            print(word.lemma, word.roman, word.vowels)
 
 if __name__ == "__main__":
     main()
