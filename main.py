@@ -9,10 +9,11 @@ from vowel import vowel
 
 
 class Word:
-    def __init__(self, word_id: int, lemma: str, roman: str):
+    def __init__(self, word_id: int, lemma: str, roman: str, vowels: str):
         self.word_id = word_id
         self.lemma = lemma
         self.roman = roman
+        self.vowels = vowels
 
 
 class InvalidArgsError(Exception):
@@ -52,9 +53,10 @@ def generate_roman_csv():
         word_id = r[0]
         lemma = r[2]
         roman = convert_roman(lemma=lemma)
+        vowels = vowel.extract(roman)
         if len(roman) == 0:
             continue
-        word = Word(word_id=word_id, lemma=lemma, roman=roman)
+        word = Word(word_id=word_id, lemma=lemma, roman=roman, vowels=vowels)
         words.append(word)
 
     now_time = get_now_time()
@@ -62,7 +64,7 @@ def generate_roman_csv():
     with open(output_csv_file_path, 'w') as f:
         writer = csv.writer(f)
         for word in words:
-            row = [word.word_id, word.lemma, word.roman]
+            row = [word.word_id, word.lemma, word.roman, word.vowels]
             writer.writerow(row)
 
 
