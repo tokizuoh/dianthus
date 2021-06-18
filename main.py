@@ -1,10 +1,11 @@
 import csv
-import sys
-import sqlite3
-import datetime
 import argparse
+import datetime
+import sqlite3
 
 import pykakasi
+
+from vowel import vowel
 
 
 class Word:
@@ -65,31 +66,6 @@ def generate_roman_csv():
             writer.writerow(row)
 
 
-def extract_vowel(roman: str) -> str:
-    vowel = 'aiueo'
-
-    result = ''
-    should_skip = False
-    for i in range(len(roman)):
-        if should_skip:
-            should_skip = False
-            continue
-        
-        if roman[i] in vowel:
-            result += roman[i]
-        elif roman[i] == 'n':
-            if i + 1 < len(roman):
-                r_next = roman[i + 1]
-                if r_next in vowel:
-                    should_skip = True
-                    result += r_next
-                else:
-                    result += roman[i]
-            else:
-                result += roman[i]
-    return result
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--gen', action='store_true', help='generate csv on ./csv/')
@@ -102,8 +78,7 @@ def main():
     elif args_dict['vow']:
         # [TODO]: Write vowel extraction logic.
         # [TODO]: Allow sorting by vowel.
-        a = extract_vowel("amana")
-        print(a)
+        a = vowel.extract('amana')
 
 if __name__ == "__main__":
     main()
