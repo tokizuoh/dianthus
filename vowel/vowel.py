@@ -1,3 +1,5 @@
+import sys
+
 def extract(roman: str) -> str:
     vowel = 'aiueo'
 
@@ -8,16 +10,29 @@ def extract(roman: str) -> str:
             should_skip = False
             continue
         
-        if roman[i] in vowel:
-            result += roman[i]
-        elif roman[i] == 'n':
+        r = roman[i]
+
+        if r in vowel:
+            result += r
+            continue
+
+        if r == 'n':
             if i + 1 < len(roman):
-                r_next = roman[i + 1]
-                if r_next in vowel:
+                nr = roman[i + 1]
+                if nr in vowel:
                     should_skip = True
-                    result += r_next
+                    result += nr
                 else:
-                    result += roman[i]
+                    result += r
             else:
-                result += roman[i]
-    return result
+                result += r
+            continue
+        
+        if i + 1 < len(roman):
+            nr = roman[i + 1]
+            if r == nr:
+                result += 'x'
+        else:
+            result += r
+
+    return result    

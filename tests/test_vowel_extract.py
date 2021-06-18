@@ -52,6 +52,13 @@ class TestExtractVowel(unittest.TestCase):
         expected = 'aua'
         actual = vowel.extract(value)
         self.assertEqual(expected, actual)
+    
+    def test_extract_vowel_include_na(self):
+        value = 'nitta'
+
+        expected = 'ixa'
+        actual = vowel.extract(value)
+        self.assertEqual(expected, actual)
 
 
 if __name__ == '__main__':
