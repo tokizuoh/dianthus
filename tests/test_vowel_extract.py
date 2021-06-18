@@ -54,7 +54,7 @@ class TestExtractVowel(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     
-    def test_extract_vowel_include_na(self):
+    def test_extract_vowel_include_sokuon(self):
         value = 'nitta'
 
         expected = 'ixa'
