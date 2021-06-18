@@ -27,5 +27,5 @@ docker-compose version 1.27.2, build 18f557f9
 ### Test
   
 ```bash
-> docker-compose exec app python -m unittest discover unittest -s ./tests
+> docker-compose exec app python -m unittest discover -s ./tests
 ```
