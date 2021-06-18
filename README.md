@@ -15,11 +15,17 @@ docker-compose version 1.27.2, build 18f557f9
 ### Build
   
 ```bash
-docker-compose up --build -d
+> docker-compose up --build -d
 ```
   
 ### Run
   
 ```bash
-docker-compose exec app python main.py
+> docker-compose exec app python main.py
+```
+
+### Test
+  
+```bash
+> docker-compose exec app python -m unittest discover unittest -s ./tests
 ```
