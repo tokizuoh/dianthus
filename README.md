@@ -23,6 +23,21 @@ docker-compose version 1.27.2, build 18f557f9
 ```bash
 > docker-compose exec app python main.py
 ```
+  
+### Usage
+  
+```bash
+> docker-compose exec app python main.py --help
+usage: main.py [-h] [--gen] [--vow] [--demo]
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --gen       generate csv on ./csv/
+  --vow       add column vowel to ./csv/original.csv (create new .csv)
+  --demo      return words with the same vowel
+```
+  
+
 
 ### Test
   
