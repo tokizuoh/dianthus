@@ -140,3 +140,4 @@ cython_debug/
 # custom
 *.db
 *.csv
+.aws/
