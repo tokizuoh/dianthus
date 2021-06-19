@@ -5,6 +5,10 @@ import datetime
 import sqlite3
 
 import pykakasi
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import storage
+from dotenv import load_dotenv
 
 from vowel import vowel
 
@@ -69,11 +73,16 @@ def generate_roman_csv():
             writer.writerow(row)
 
 
-def get_same_vowel_words(vowels: str) -> [Word]:
+def get_recent_update_csv_file_path() -> str:
     directory_path = './csv'
     files = os.listdir(directory_path)
     file_name = sorted(list(filter(lambda x: not x.startswith('original'), files)))[-1]
     file_path = '{}/{}'.format(directory_path, file_name)
+    return file_path
+
+
+def get_same_vowel_words(vowels: str) -> [Word]:
+    file_path = get_recent_update_csv_file_path()
 
     result = []
 
@@ -87,11 +96,30 @@ def get_same_vowel_words(vowels: str) -> [Word]:
     return result
 
 
+def upload_blob():
+    load_dotenv('.env')
+    firebase_credential_file_path = os.environ.get('FIREBASE_CREDENTIAL_FILE_PATH')
+    firebase_storage_bucket = os.environ.get('FIREBASE_STORAGE_BUCKET')
+
+    cred = credentials.Certificate(firebase_credential_file_path)
+    firebase_admin.initialize_app(cred, {'storageBucket': firebase_storage_bucket})
+    
+    bucket = storage.bucket()
+
+    destination_blob_name = 'demo.csv'
+    source_file_name = get_recent_update_csv_file_path()
+
+    blob = bucket.blob(destination_blob_name)
+    blob.upload_from_filename(source_file_name)
+    print('success')
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--gen', action='store_true', help='generate csv on ./csv/')
     parser.add_argument('--vow', action='store_true', help='add column vowel to ./csv/original.csv (create new .csv)')
     parser.add_argument('--demo', action='store_true', help='return words with the same vowel')
+    parser.add_argument('--upload', action='store_true', help='upload csv to aws-s3')
     args = parser.parse_args()
     
     args_dict = vars(args)
@@ -108,6 +136,9 @@ def main():
         
         for word in words:
             print(word.lemma, word.roman, word.vowels)
+    elif args_dict['upload']:
+        upload_blob()
+
 
 if __name__ == "__main__":
     main()
