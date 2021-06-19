@@ -140,4 +140,4 @@ cython_debug/
 # custom
 *.db
 *.csv
-.aws/
+firebase-credential.json
